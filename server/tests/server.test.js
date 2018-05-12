@@ -147,7 +147,7 @@ describe('DELETE /todos/:id', () => {
                 }
                 
                 Todo.findById(hexId).then((todo) => {
-                    expect(todo).toExist();
+                    expect(todo).toBeTruthy();
                     done();
                 }).catch((e) => done(e));
             });
@@ -263,7 +263,7 @@ describe('POST /users', () => {
                 }
                 User.findOne({email}).then((user) => {
                     expect(user).toBeTruthy();
-                    expect(user.password).toNotBe(password);
+                    expect(user.password).not.toBe(password);
                     done();
                 }).catch((e) => done(e));
             });
@@ -305,7 +305,7 @@ describe('POST /users/login', () => {
             })
             .expect(200)
             .expect((res) => {
-                expect(res.headers['x-auth']).toExist();
+                expect(res.headers['x-auth']).toBeTruthy();
             })
             .end((err, res) => {
                 if(err){
@@ -313,7 +313,7 @@ describe('POST /users/login', () => {
                 }
 
                 User.findById(users[1]._id).then((user) => {
-                    expect(user.tokens[1]).toInclude({
+                    expect(user.toObject().tokens[1]).toMatchObject({
                         access: "auth",
                         token: res.headers['x-auth']
                     });
@@ -332,7 +332,7 @@ describe('POST /users/login', () => {
             })
             .expect(400)
             .expect((res) => {
-                expect(res.headers['x-auth']).toNotExist();
+                expect(res.headers['x-auth']).toBeFalsy();
             })
             .end((err, res) => {
                 if(err){
